@@ -31,6 +31,10 @@ public class MainClass04 {
 		mem1.Members(3,"하하","호호");
 		mem1.Members(4, "흐흐", "히히");
 		
+		new Member().showInfo();
 		
+		//Member 객체의 메소드 호출하기
+		mem1.showInfo();
+		mem2.showInfo();
 	}
 }
