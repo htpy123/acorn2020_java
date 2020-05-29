@@ -19,6 +19,7 @@ public class MainClass04 {
 		mem1.name="김구라";
 		mem1.addr="노량진";
 		
+		// 2, 해골, 행신동 도 새로운 Member 객체를 생성해서 담아 보세요.
 		Member mem2 = new Member();
 		mem2.number=2;
 		mem2.name="해골";
@@ -29,5 +30,7 @@ public class MainClass04 {
 		
 		mem1.Members(3,"하하","호호");
 		mem1.Members(4, "흐흐", "히히");
+		
+		
 	}
 }
