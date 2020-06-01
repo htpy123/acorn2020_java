@@ -56,4 +56,12 @@ public class MyObject {
 	public void doSome(Radio r, Speaker s) {
 		System.out.println("doSome() 메소드가 호출되었습니다");
 	}
+	
+	//test.mypac MainClass05 예제 문제
+	public void allSome(int num, String Str, Car car, Radio r, Speaker s){
+		System.out.println("num :"+num+"\n 이름 :"+Str);
+		car.drive();
+		r.message();
+		s.message();
+	}
 }
