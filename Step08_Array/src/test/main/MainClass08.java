@@ -3,7 +3,7 @@ package test.main;
 import java.util.Random;
 import java.util.Scanner;
 
-import test.mypac.MainClass10_random;
+import test.mypac.MainClass08_random;
 
 /*
  * 	1. 	cherry, apple, banana, melon, 7
@@ -18,13 +18,13 @@ import test.mypac.MainClass10_random;
 public class MainClass08 {
 	public static void main(String[] args) {
 		Scanner scan = new Scanner(System.in);
-		MainClass10_random rD = new MainClass10_random();
+		MainClass08_random rD = new MainClass08_random();
 		
 		String[] str = {"cherry", "apple ", "banana", "melon ", "  7   "};
 		
 		Random ran = new Random();
-		int a = ran.nextInt(5);
-		System.out.println(str[a]);
+		int a = ran.nextInt(101);
+		System.out.println(str[rD.returnNum(a)]);
 		while(true) {
 			System.out.println("=======빠칭코=======");
 			System.out.println("1. 빠칭코 슬롯 내리기(Enter)");
@@ -38,5 +38,6 @@ public class MainClass08 {
 				break;
 			}
 		}
+	
 	}
 }
