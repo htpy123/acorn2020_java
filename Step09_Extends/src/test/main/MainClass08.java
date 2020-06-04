@@ -1,6 +1,7 @@
 package test.main;
 
 import test.auto.Engine;
+import test.auto.MiniCar;
 import test.auto.SportsCar;
 import test.auto.Truck;
 
@@ -17,5 +18,8 @@ public class MainClass08 {
 		
 		SportsCar SC = new SportsCar(new Engine());
 		SC.drive();
+		
+		MiniCar mc = new MiniCar(new Engine());
+		mc.drive();
 	}
 }
