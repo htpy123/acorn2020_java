@@ -20,43 +20,85 @@ public class MainClass13 {
 		//컴퓨터가 랜덤하게 가위,바위,보를 정해야 하니 Random 객체를 생성한다.
 		Random ran = new Random();
 		
-		while(true) {
-			System.out.println("[ 컴퓨터와 가위 바위 보 !!! ]");
-			System.out.println("[그만하시려면 q를 입력하세요 ]");
-			String[] str = {"s","r","p"};			
-			System.out.println("[가위(S)] [바위(R)] [보(P)]");
-			System.out.println("가위 바위 보 중에 하나를 입력하세요");
-			System.out.print("입력 : ");
-			
-			String sr = scan.nextLine();
-			int myNum=0;
-			int comNum = ran.nextInt(3);
 		
-			if(sr.equals("s")||sr.equals("S")) {
-				myNum=0;
-			}else if(sr.equals("r")||sr.equals("R")) {
-				myNum=1;
-			}else if(sr.equals("p")||sr.equals("P")) {
-				myNum=2;
-			}
-			
-			String result = "";
-			if((myNum==0&&comNum==2)||(myNum==1&&comNum==0)||(myNum==2&&comNum==1)) {
-				result="Win";
-			}else if(myNum==comNum) {
-				result="Draw";
-			}else {
-				result="Lose";
-			}
-			System.out.println("나 : "+items[myNum]+" VS 컴 : "+items[comNum]);
-			System.out.println(result);
-			
-			
-			if(sr.equals("q")) {
-				System.out.println("[ 컴퓨터와 가위 바위 보 를 종료합니다 ]");
-				break;
-			}
+		//1. 사용자 입력을 받는다. 
+		System.out.println("가위(s) 바위(r) 보(p) 입력:");
+		String clientInput=scan.nextLine();
+		
+		//2. "s" 는 0, "r" 은 1, "p" 는 2 로 바꿔 보기로 하자
+		int me=0;
+		if(clientInput.equals("s")) {
+			me=0;
+		}else if(clientInput.equals("r")) {
+			me=1;
+		}else if(clientInput.equals("p")) {
+			me=2;
 		}
+		
+		//3. Computer 도 랜덤하게 하나의 숫자를 부여 받는다 (0,1,2  중에 하나)
+		int com=ran.nextInt(3);
+		//win, draw, lose 문자열을 담을 변수를 미리 만들어 준다.
+		String result=null;
+		//4. 승패를 판단해야 한다. 
+		if( (me==0 && com==2) || (me==1 && com==0) || (me==2 && com==1)) {//내가 이기는 경우는 무엇일까?
+			result="win!";
+		}else if(me == com) {//요거는 비기는 경우 
+			result="draw";
+		}else {//나머지는 따져 보지 않아도 내가 진경우 일듯...
+			result="lose ㅜㅜ";
+		}
+		System.out.println("나:"+items[me]+" vs 컴:"+items[com]);
+		System.out.println(result);
+
+
+
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+//		while(true) {
+//			System.out.println("[ 컴퓨터와 가위 바위 보 !!! ]");
+//			System.out.println("[그만하시려면 q를 입력하세요 ]");
+//			String[] str = {"s","r","p"};			
+//			System.out.println("[가위(S)] [바위(R)] [보(P)]");
+//			System.out.println("가위 바위 보 중에 하나를 입력하세요");
+//			System.out.print("입력 : ");
+//			
+//			String sr = scan.nextLine();
+//			int myNum=0;
+//			int comNum = ran.nextInt(3);
+//		
+//			if(sr.equals("s")||sr.equals("S")) {
+//				myNum=0;
+//			}else if(sr.equals("r")||sr.equals("R")) {
+//				myNum=1;
+//			}else if(sr.equals("p")||sr.equals("P")) {
+//				myNum=2;
+//			}
+//			
+//			String result = "";
+//			if((myNum==0&&comNum==2)||(myNum==1&&comNum==0)||(myNum==2&&comNum==1)) {
+//				result="Win";
+//			}else if(myNum==comNum) {
+//				result="Draw";
+//			}else {
+//				result="Lose";
+//			}
+//			System.out.println("나 : "+items[myNum]+" VS 컴 : "+items[comNum]);
+//			System.out.println(result);
+//			
+//			
+//			if(sr.equals("q")) {
+//				System.out.println("[ 컴퓨터와 가위 바위 보 를 종료합니다 ]");
+//				break;
+//			}
+//		}
 	}
 }
 
