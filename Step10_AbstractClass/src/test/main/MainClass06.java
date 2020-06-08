@@ -28,11 +28,15 @@ public class MainClass06 {
 			@Override
 			public void attack() {
 				System.out.println("아군이다 사격중지!");
-			}	
+			}
+			public void fly() {
+				System.out.println("날아 다녀요");
+			}
 		}
-		
-		Weapon w2 = new OurWeapon();
+		OurWeapon w2 = new OurWeapon();  //fly method를 이용하기 위해 OurWeapon 설명서 사용
+//		Weapon w2 = new OurWeapon();
 		useWeapon(w2);
+		w2.fly();  // OurWeapon()을 사용해야 fly사용가능
 	}
 	
 	public static void useWeapon(Weapon w) {
