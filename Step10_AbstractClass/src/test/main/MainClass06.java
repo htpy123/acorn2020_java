@@ -37,6 +37,7 @@ public class MainClass06 {
 //		Weapon w2 = new OurWeapon();
 		useWeapon(w2);
 		w2.fly();  // OurWeapon()을 사용해야 fly사용가능
+
 	}
 	
 	public static void useWeapon(Weapon w) {
