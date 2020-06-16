@@ -2,6 +2,7 @@ package test.main;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.FileDialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -92,6 +93,8 @@ public class Quiz03 extends JFrame implements ActionListener{
 	}
 	
 	public void New() {
+		setTitle("New");
+		area.setText("");
 		area.setVisible(true);
 	}
 	
@@ -101,7 +104,7 @@ public class Quiz03 extends JFrame implements ActionListener{
 		
 		//2. memo.txt 파일에 저장하기
 		File file1 = new File("c:/acorn2020/myFolder/save.txt");
-
+		file1.delete();
 		try {
 			boolean isExist = file1.exists();
 			if(!isExist) {
@@ -122,26 +125,86 @@ public class Quiz03 extends JFrame implements ActionListener{
 		}
 	}
 	public void Open() {
-		File memoFile = new File("c:/acorn2020/myFolder/save.txt");
+
+		//1. FileDialog를 열어 불러올 파일 지정
+
+		FileDialog dialog = new FileDialog(this, "열기", FileDialog.LOAD);
+
+		dialog.setDirectory("c:/acorn2020/myFolder/");   //
+
+		dialog.setVisible(true);
+
+		
+
+		// 2. FileDialog가 비정상 종료되었을때
+
+		if(dialog.getFile() == null) return;
+
+		
+
+		// 3. 불러올 파일의 경로명 저장
+
+		String dfName = dialog.getDirectory() + dialog.getFile();
+
+		
+
+		// 4. 파일 열기, TextArea에 뿌려주기
+
 		try {
-			if(!memoFile.exists()) {
-				System.out.println("파일이 존재 하지 않습니다.");
-				return;
+
+			BufferedReader reader = new BufferedReader(new FileReader(dfName));
+
+			area.setText("");
+
+			String line;
+
+			while((line = reader.readLine()) != null) { //읽을 문자열이 없을때까지 반복
+
+				area.append(line + "\n");       //한줄씩 TextArea에 추가
+
 			}
-			FileReader fr = new FileReader(memoFile);
-			BufferedReader br = new BufferedReader(fr);
+
+			reader.close();
+
 			
-			while(true) {
-				String line = br.readLine();
-				if(line == null) { 
-					break; 
-				}
-				
-				area.append(line);
-				area.append("\r\n");
-			}
-		}catch(IOException e) {
-			e.printStackTrace();
+
+			setTitle(dialog.getFile());
+
+		} catch (Exception e2) {
+
+			JOptionPane.showMessageDialog(this, "열기 오류");
+
 		}
+		
+		
+		
+		
+		
+		//		File memoFile = new File("c:/acorn2020/myFolder/save.txt");
+//		try {
+//			if(!memoFile.exists()) {
+//				System.out.println("파일이 존재 하지 않습니다.");
+//				return;
+//			}
+//			FileReader fr = new FileReader(memoFile);
+//			BufferedReader br = new BufferedReader(fr);
+//			
+//			while(true) {
+//				String line = br.readLine();
+//				if(line == null) { 
+//					break; 
+//				}
+//				
+//				area.append(line);
+//				area.append("\r\n");
+//			}
+//		}catch(IOException e) {
+//			e.printStackTrace();
+//		}
 	}
 }
+
+
+
+
+
