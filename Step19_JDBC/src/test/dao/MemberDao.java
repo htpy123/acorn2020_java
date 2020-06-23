@@ -146,9 +146,10 @@ public class MemberDao {
 	//회원 정보를 DB에 저장하는 메소드(작업의 성공여부가 boolean 으로 리턴된다)
 	public boolean insert(MemberDto dto) {
 		PreparedStatement pstmt = null;
-		Connection conn = new DBConnect().getConn();;
+		Connection conn = null;
 		int flag=0;
 		try {
+			conn = new DBConnect().getConn();
 			String sql = "INSERT INTO member"
 					+" (num, name, addr)"
 					+" VALUES(member_seq.NEXTVAL, ?, ?)";
@@ -158,7 +159,7 @@ public class MemberDao {
 			//sql 문을 수행하고 변화된 row의 갯수를 리턴 받는다. 여기서는(1)
 			flag = pstmt.executeUpdate();
 			
-			System.out.println("회원정보 추가 완료");
+//			System.out.println("회원정보 추가 완료");
 			
 		}catch(Exception e) {
 			e.printStackTrace();
