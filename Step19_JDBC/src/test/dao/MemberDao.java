@@ -39,7 +39,7 @@ public class MemberDao {
 		Connection conn = new DBConnect().getConn();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		MemberDto dto = new MemberDto();
+		MemberDto dto = null;
 		try {
 			String sql = "SELECT name,addr"
 					+" FROM member"
@@ -48,11 +48,12 @@ public class MemberDao {
 			pstmt.setInt(1, num);
 			rs = pstmt.executeQuery();
 			while(rs.next()) {
+				dto = new MemberDto();
 				dto.setNum(num);
 				dto.setName(rs.getString("name"));
 				dto.setAddr(rs.getString("addr"));
 				
-				System.out.println(num+" | "+rs.getString("name")+" | "+rs.getString("addr"));
+				//System.out.println(num+" | "+rs.getString("name")+" | "+rs.getString("addr"));
 			}
 			
 		}catch(Exception e) {
@@ -65,33 +66,36 @@ public class MemberDao {
 				e.printStackTrace();
 			}
 		}
+		
 		return dto;
 	}
 	//회원 목록을 리턴해주는 메소드
 	public List<MemberDto> getList(){
 		List<MemberDto> list = new ArrayList<>();
-		Connection conn = new DBConnect().getConn();
+		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs= null;
 		try {
+			conn = new DBConnect().getConn();
 			String sql = "SELECT num,name,addr"
 					+" FROM member"
 					+" ORDER BY num ASC";
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
-			MemberDto dto = new MemberDto();
+			
 			while(rs.next()) {
 				int num = rs.getInt("num");
 				String name = rs.getString("name");
 				String addr = rs.getString("addr");
 				
+				MemberDto dto = new MemberDto();
 				dto.setNum(num);
 				dto.setName(name);
 				dto.setAddr(addr);
 				
 				list.add(dto);
 				
-				System.out.println(num+" | "+name+" | "+addr);
+//				System.out.println(num+" | "+name+" | "+addr);
 			}
 			
 		}catch(Exception e) {
@@ -107,17 +111,21 @@ public class MemberDao {
 		return list;
 	}
 	//회원 한명의 정보를 DB에서 삭제하는 메소드
-	public void delete(int num) {
+	public boolean delete(int num) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
+		int flag = 0;
 		try {
 			conn = new DBConnect().getConn();
 			String sql = "DELETE FROM member"
 					+" WHERE num = ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, num);
-			pstmt.executeUpdate();
+			
+			flag = pstmt.executeUpdate();
+			
 			System.out.println("회원 정보 삭제");
+		
 		}catch(Exception e) {
 			e.printStackTrace();
 		}finally {
@@ -127,13 +135,19 @@ public class MemberDao {
 			}catch(Exception e) {
 				e.printStackTrace();
 			}
+		}if(flag>0) {
+			return true;
+		}else {
+			return false;
 		}
 	}
-	//회원 정보를 DB에 저장하는 메소드
-	public void insert(MemberDto dto) {
+//	회원 정보를 DB에 저장하는 메소드(작업의 성공여부가 boolean 으로 리턴된다)
+//	public void insert(MemberDto dto) {
+	//회원 정보를 DB에 저장하는 메소드(작업의 성공여부가 boolean 으로 리턴된다)
+	public boolean insert(MemberDto dto) {
 		PreparedStatement pstmt = null;
 		Connection conn = new DBConnect().getConn();;
-		
+		int flag=0;
 		try {
 			String sql = "INSERT INTO member"
 					+" (num, name, addr)"
@@ -141,7 +155,8 @@ public class MemberDao {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, dto.getName());
 			pstmt.setString(2, dto.getAddr());
-			pstmt.executeUpdate();
+			//sql 문을 수행하고 변화된 row의 갯수를 리턴 받는다. 여기서는(1)
+			flag = pstmt.executeUpdate();
 			
 			System.out.println("회원정보 추가 완료");
 			
@@ -154,11 +169,17 @@ public class MemberDao {
 				e.printStackTrace();
 			}
 		}
+		if(flag>0) {
+			return true; //작업 성공이라는 의미에서 true를 리턴한다
+		}else {
+			return false; //작업 실패라는 의미에서 false 를 리턴한다.
+		}
 	}
 	//회원 정보를 DB에서 수정하는 메소드
-	public void update(MemberDto dto) {
+	public boolean update(MemberDto dto) {
 		PreparedStatement pstmt = null;
 		Connection conn = new DBConnect().getConn();
+		int flag=0;
 		try {
 			String sql = "UPDATE member"
 					+" SET name = ?, addr = ?"
@@ -167,8 +188,8 @@ public class MemberDao {
 			pstmt.setString(1, dto.getName());
 			pstmt.setString(2, dto.getAddr());
 			pstmt.setInt(3, dto.getNum());
-			
-			pstmt.executeUpdate();
+			//update 된 row 의 갯수가 반환 된다
+			flag = pstmt.executeUpdate();
 			
 			System.out.println("회원정보 수정 완료");
 		}catch(Exception e) {
@@ -179,6 +200,10 @@ public class MemberDao {
 			}catch(Exception e) {
 				e.printStackTrace();
 			}
+		}if(flag>0) {
+			return true;
+		}else {
+			return false;
 		}
 	}
 }
