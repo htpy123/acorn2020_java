@@ -1,5 +1,7 @@
 package test.dto;
 
+
+
 public class MemberDto {
 	//회원 한명의 정보를 담을 필드 선언
 	private int num;

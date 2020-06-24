@@ -177,10 +177,10 @@ public class MemberDao {
 		}
 	}
 	//회원 정보를 DB에서 수정하는 메소드
-	public boolean update(MemberDto dto) {
+	public void update(MemberDto dto) {
 		PreparedStatement pstmt = null;
 		Connection conn = new DBConnect().getConn();
-		int flag=0;
+		
 		try {
 			String sql = "UPDATE member"
 					+" SET name = ?, addr = ?"
@@ -190,7 +190,7 @@ public class MemberDao {
 			pstmt.setString(2, dto.getAddr());
 			pstmt.setInt(3, dto.getNum());
 			//update 된 row 의 갯수가 반환 된다
-			flag = pstmt.executeUpdate();
+			pstmt.executeUpdate();
 			
 			System.out.println("회원정보 수정 완료");
 		}catch(Exception e) {
@@ -198,13 +198,10 @@ public class MemberDao {
 		}finally {
 			try {
 				if(pstmt!=null)pstmt.close();
+				if(conn!=null)conn.close();
 			}catch(Exception e) {
 				e.printStackTrace();
 			}
-		}if(flag>0) {
-			return true;
-		}else {
-			return false;
 		}
 	}
 }

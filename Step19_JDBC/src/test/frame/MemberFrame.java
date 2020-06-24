@@ -3,6 +3,8 @@ package test.frame;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -18,11 +20,12 @@ import javax.swing.table.DefaultTableModel;
 import test.dao.MemberDao;
 import test.dto.MemberDto;
 
-public class MemberFrame extends JFrame implements ActionListener{
+public class MemberFrame extends JFrame implements ActionListener,PropertyChangeListener{
 	//필드
 	JTextField inputName, inputAddr;
 	DefaultTableModel model;
-	JTable table;
+	JTable table;	
+	
 	//생성자
 	public MemberFrame() {
 		setLayout(new BorderLayout());
@@ -40,7 +43,6 @@ public class MemberFrame extends JFrame implements ActionListener{
 		deleteBtn.setActionCommand("delete");
 		deleteBtn.addActionListener(this);
 		
-		
 		JPanel panel = new JPanel();
 		panel.add(label1);
 		panel.add(inputName);
@@ -49,7 +51,6 @@ public class MemberFrame extends JFrame implements ActionListener{
 		panel.add(saveBtn);
 		panel.add(deleteBtn);
 
-		JPanel panel1 = new JPanel();
 		
 		add(panel, BorderLayout.NORTH);
 		
@@ -58,7 +59,16 @@ public class MemberFrame extends JFrame implements ActionListener{
 		//칼럼명을 String[] 에 순서대로 준비
 		String[] colNames = {"번호","이름","주소"};
 		//테이블에 출력할 정보를 가지고 있는 모델 객체 (칼럼명, row 갯수)
-		model = new DefaultTableModel(colNames, 0);
+		model = new DefaultTableModel(colNames, 0) {
+			//인자로 전달되는 행(row), 열(column) 수정 가능 여부를 리턴하는 메소드
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				//만일 첫번째 칼럼이면
+				if(column==0) {
+					return false;
+				}return true;
+			}
+		};
 		//모델을 테이블에 연결한다.
 		table.setModel(model);
 		//스크롤이 가능 하도록
@@ -74,7 +84,10 @@ public class MemberFrame extends JFrame implements ActionListener{
 //		model.addRow(row2);
 		//테이블에 회원 목록 출력하기 2
 		displayMember();
+		//테이블에서 발생하는 이벤트 리스너 등록 하기
 		
+//		table.addFocusListener(this);		
+		table.addPropertyChangeListener(this);
 		
 	}
 	//테이블에 회원 목록을 출력하는 메소드
@@ -103,6 +116,7 @@ public class MemberFrame extends JFrame implements ActionListener{
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		
 		//액션 command 읽어오기
 		String command = e.getActionCommand();
 		if(command.equals("save")) {
@@ -118,8 +132,6 @@ public class MemberFrame extends JFrame implements ActionListener{
 			MemberDao dao = MemberDao.getInstance();
 			boolean isSuccess = dao.insert(dto);
 			
-			Object[] row1 = {dto.getNum(), dto.getName(), dto.getAddr()};
-			model.addRow(row1);
 			if(isSuccess) {
 				JOptionPane.showMessageDialog(this, name+" 님의 정보 추가 했습니다");
 			}else {
@@ -129,12 +141,20 @@ public class MemberFrame extends JFrame implements ActionListener{
 			//JTable 에 목록 다시 출력하기
 			displayMember();
 			
+			
+			
 		}else if(command.equals("delete")) {
+			
 			//1. 선택된 row 인덱스를 읽어온다.
 				int selectedIndex = table.getSelectedRow();
 				if(selectedIndex==-1) {	//선택된 row가 없다면
 					return;	//메소드를 여기서 끝내라(리턴해라)
 				}
+			//실제 삭제 할것인지 확인을 한다
+			int selection = JOptionPane.showConfirmDialog(this, "선택된 row 를 삭제 하겠습니까?");
+			if(selection != JOptionPane.YES_OPTION) {
+				return;
+			}
 			//2. 선택된 row의 첫번째 칼럼의 숫자를 읽어온다( 삭제할 회원의 번호 )
 				int num = (int)model.getValueAt(selectedIndex, 0);
 			//3. MemberDao 객체를 이용해서 해당 회원의 정보를 삭제 한다.
@@ -143,5 +163,31 @@ public class MemberFrame extends JFrame implements ActionListener{
 			//4. table 에 회원목록 다시 출력하기
 				displayMember();
 		}
+		
+	}
+	//현재 테이블 cell을 수정중인지 여부를 저장할 필드
+	boolean isEditing=false;
+	
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		
+		System.out.println("property change!");
+		System.out.println(evt.getPropertyName());
+		if(evt.getPropertyName().equals("tableCellEditor")) {
+			if(isEditing) {//수정중일때
+				//변화된 값을 읽어와서 DB에 반영한다.
+				int selectedIndex = table.getSelectedRow();
+				int num = (int)model.getValueAt(selectedIndex, 0);
+				String name = (String)model.getValueAt(selectedIndex, 1);
+				String addr = (String)model.getValueAt(selectedIndex, 2);
+				//수정할 회원의 정보를 MemberDto 객체에 담고
+				MemberDto dto = new MemberDto(num,name,addr);
+				//DB에 저장하기
+				MemberDao.getInstance().update(dto);
+				isEditing=false; //수정중이 아니라고 표시한다.
+			}
+			isEditing=true;//수정중이라 표시한다.
+		}
 	}
 }
+	
